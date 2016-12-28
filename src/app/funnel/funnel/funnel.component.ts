@@ -34,7 +34,8 @@ export class FunnelComponent implements OnInit {
   }
 
   toShapes(): Shape<any>[] {
-    const {startValue, steps} = this.funnel;
+    const {steps} = this.funnel;
+    const startValue = 1.2 * steps[0].value;
     const result = [];
     const height = this.context.height() / steps.length;
 

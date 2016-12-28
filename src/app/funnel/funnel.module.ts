@@ -4,6 +4,7 @@ import {FunnelComponent} from './funnel/funnel.component';
 import {FunnelEditorComponent} from "./funnel-editor/funnel-editor.component";
 import {FormsModule} from "@angular/forms";
 import {MaterialModule} from "@angular/material";
+import { FunnelEditorStepComponent } from './funnel-editor-step/funnel-editor-step.component';
 
 @NgModule({
   imports: [
@@ -12,7 +13,7 @@ import {MaterialModule} from "@angular/material";
     MaterialModule
   ],
   exports: [FunnelComponent, FunnelEditorComponent],
-  declarations: [FunnelComponent, FunnelEditorComponent]
+  declarations: [FunnelComponent, FunnelEditorComponent, FunnelEditorStepComponent]
 })
 export class FunnelModule {
 }

@@ -10,7 +10,7 @@ import {FunnelModule} from "./funnel/funnel.module";
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
   ],
   imports: [
     BrowserModule,

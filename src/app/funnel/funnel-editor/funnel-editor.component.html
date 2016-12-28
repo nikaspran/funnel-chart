@@ -1,12 +1,6 @@
 <form>
   <md-list>
-    <md-list-item *ngFor="let step of funnel.steps">
-      <md-input-container>
-        <input md-input [(ngModel)]="step.name" [ngModelOptions]="{standalone: true}"/>
-      </md-input-container>
-      <md-input-container>
-        <input md-input [(ngModel)]="step.value" [ngModelOptions]="{standalone: true}"/>
-      </md-input-container>
-    </md-list-item>
+    <fc-funnel-editor-step *ngFor="let step of funnel.steps" [step]="step">
+    </fc-funnel-editor-step>
   </md-list>
 </form>
