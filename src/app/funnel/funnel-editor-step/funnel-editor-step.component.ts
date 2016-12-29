@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ElementRef, ViewChild} from '@angular/core';
 import {FunnelStep} from "../funnel.model";
 
 @Component({
@@ -15,5 +15,4 @@ export class FunnelEditorStepComponent implements OnInit {
 
   ngOnInit() {
   }
-
 }

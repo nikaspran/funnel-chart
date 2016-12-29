@@ -4,6 +4,10 @@
   height: 100%;
 }
 
+md-toolbar {
+  z-index: 100;
+}
+
 .app_content {
   flex: 1 1;
   display: flex;
@@ -13,10 +17,11 @@
   margin: 0 auto;
 
   > * {
-    flex: 1 1;
     min-width: 300px;
   }
 
   > fc-funnel {
+    margin: 2rem;
+    flex: 1 1;
   }
 }

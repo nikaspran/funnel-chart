@@ -1,6 +1,12 @@
 <form>
-  <md-list>
-    <fc-funnel-editor-step *ngFor="let step of funnel.steps" [step]="step">
-    </fc-funnel-editor-step>
-  </md-list>
+  <md-card *ngFor="let step of funnel.steps" class="md-elevation-z1">
+    <fc-funnel-editor-step [step]="step"></fc-funnel-editor-step>
+    <button md-icon-button (click)="removeStep(step)">
+      <md-icon>delete</md-icon>
+    </button>
+  </md-card>
 </form>
+
+<button md-fab class="md-elevation-z24" type="button" (click)="addStep()">
+  <md-icon>add</md-icon>
+</button>

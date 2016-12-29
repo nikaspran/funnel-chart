@@ -1,8 +1,8 @@
-<md-list-item>
-  <md-input-container>
-    <input md-input [(ngModel)]="step.name" [ngModelOptions]="{standalone: true}"/>
-  </md-input-container>
-  <md-input-container>
-    <input md-input [(ngModel)]="step.value" [ngModelOptions]="{standalone: true}"/>
-  </md-input-container>
-</md-list-item>
+<md-input-container>
+  <input md-input [(ngModel)]="step.name" [ngModelOptions]="{standalone: true}" placeholder="Name"/>
+</md-input-container>
+<md-input-container>
+  <input #value="ngModel" md-input [(ngModel)]="step.value" [ngModelOptions]="{standalone: true}" pattern="^\d+%?$"
+         placeholder="Value"/>
+  <md-hint class="funnel-editor-step_error" *ngIf="!value.valid" align="start">Must be a Number or %</md-hint>
+</md-input-container>

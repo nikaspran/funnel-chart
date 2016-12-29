@@ -1,0 +1,5 @@
+@import '~@angular/material/core/theming/all-theme';
+
+.funnel-editor-step_error {
+  color: md-color($md-red, 500, 1);
+}

@@ -1,0 +1,28 @@
+:host {
+  display: flex;
+  position: relative;
+}
+
+form {
+  flex: 1 1;
+  overflow: scroll;
+  padding: 0 1rem 4rem;
+}
+
+md-card {
+  padding: 1rem;
+
+  &:first-of-type {
+    margin-top: 2rem;
+  }
+
+  & + & {
+    margin-top: .5rem;
+  }
+}
+
+[md-fab] {
+  position: absolute;
+  right: 2rem;
+  bottom: 2rem;
+}
