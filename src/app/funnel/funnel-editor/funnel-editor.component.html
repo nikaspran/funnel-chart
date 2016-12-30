@@ -1,5 +1,8 @@
-<form>
+<form [dragula]="'steps'" [dragulaModel]="funnel.steps">
   <md-card *ngFor="let step of funnel.steps" class="md-elevation-z1">
+    <button md-icon-button [disableRipple]="true">
+      <md-icon class="funnel-editor_reorder-handle">reorder</md-icon>
+    </button>
     <fc-funnel-editor-step [step]="step"></fc-funnel-editor-step>
     <button md-icon-button (click)="removeStep(step)">
       <md-icon>delete</md-icon>

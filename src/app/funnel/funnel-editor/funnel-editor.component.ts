@@ -1,5 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {Funnel, FunnelStep} from "../funnel.model";
+import {DragulaService} from "ng2-dragula";
 
 @Component({
   selector: 'fc-funnel-editor',
@@ -10,7 +11,12 @@ import {Funnel, FunnelStep} from "../funnel.model";
 export class FunnelEditorComponent implements OnInit {
   funnel: Funnel;
 
-  constructor() {
+  constructor(dragula: DragulaService) {
+    dragula.setOptions('steps', {
+      moves(el, container, handle) {
+        return handle.classList.contains('funnel-editor_reorder-handle');
+      }
+    });
   }
 
   ngOnInit() {
