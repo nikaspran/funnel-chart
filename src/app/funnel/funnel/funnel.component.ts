@@ -1,7 +1,7 @@
 import {
   Component, OnInit, ViewChild, ElementRef, SimpleChanges, KeyValueDiffer
 } from '@angular/core';
-import {CanvasService, Shape, EquilateralTrapezoid, RenderContext} from "../canvas.service";
+import {CanvasService, Shape, EquilateralTrapezoid, RenderContext, Label} from "../canvas.service";
 import {Funnel} from "../funnel.model";
 
 @Component({
@@ -55,16 +55,30 @@ export class FunnelComponent implements OnInit {
         continue;
       }
 
+      const centerY = height * i + height / 2;
+
       result.push(new EquilateralTrapezoid({
         id: current.id,
         centerX: this.context.width() / 2,
-        centerY: height * i + height / 2,
+        centerY,
         fill: current.background,
         stroke: current.border,
         height,
         widthTop,
         widthBottom
       }));
+
+      if (current.name) {
+        result.push(new Label({
+          id: `${current.id}_title`,
+          fill: 'black',
+          stroke: 'none',
+          text: current.name,
+          fontSize: 36,
+          centerX: this.context.width() / 2,
+          centerY
+        }));
+      }
     }
     return result;
   }

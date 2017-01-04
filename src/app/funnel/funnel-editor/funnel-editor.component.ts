@@ -1,17 +1,19 @@
 import {Component, OnInit} from '@angular/core';
 import {Funnel, FunnelStep} from "../funnel.model";
 import {DragulaService} from "ng2-dragula";
+import {ColorsService} from "../colors.service";
 
 @Component({
   selector: 'fc-funnel-editor',
   templateUrl: './funnel-editor.component.html',
   styleUrls: ['./funnel-editor.component.scss'],
   inputs: ['funnel'],
+  providers: [ColorsService]
 })
 export class FunnelEditorComponent implements OnInit {
   funnel: Funnel;
 
-  constructor(dragula: DragulaService) {
+  constructor(dragula: DragulaService, private colors: ColorsService) {
     dragula.setOptions('steps', {
       moves(el, container, handle) {
         return handle.classList.contains('funnel-editor_reorder-handle');
@@ -23,10 +25,15 @@ export class FunnelEditorComponent implements OnInit {
   }
 
   addStep() {
+    const previousStep = this.funnel.steps[this.funnel.steps.length - 1];
+    const backgroundColor = this.colors.lighterThan(previousStep.backgroundColor);
+
     this.funnel.steps.push({
-      id: this.generateUUID(),
-      background: 'black', // TODO
-      border: 'blue'
+      id: `step-${this.generateUUID()}`,
+      backgroundColor,
+      background: this.colors.mainOf(backgroundColor),
+      border: 'none',
+      value: Math.round(previousStep.value * 0.8)
     });
   }
 

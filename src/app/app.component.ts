@@ -1,24 +1,52 @@
 import {Component} from '@angular/core';
-import {Funnel} from "./funnel/funnel.model";
+import {Funnel, FunnelStep} from "./funnel/funnel.model";
+import {ColorsService, THEMES} from "./funnel/colors.service";
+
+function oneOf(items) {
+  return items[Math.floor(Math.random() * items.length)];
+}
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  styleUrls: ['./app.component.scss'],
+  providers: [ColorsService]
 })
 export class AppComponent {
   funnel: Funnel;
+  theme: string;
 
-  constructor() {
+  constructor(private colors: ColorsService) {
+    this.theme = oneOf(THEMES);
+
     this.funnel = {
       startValue: 250,
-      steps: [
-        {id: 'funnel-1-step-1', background: 'red', border: 'red', name: 'Impressions', value: 200},
-        {id: 'funnel-1-step-2', background: 'blue', border: 'red', name: 'Clicks', value: 100},
-        {id: 'funnel-1-step-3', background: 'green', border: 'red', name: 'Downloads', value: 60},
-        {id: 'funnel-1-step-4', background: 'yellow', border: 'red', name: 'Purchases', value: 40},
-        {id: 'funnel-1-step-5', background: 'tomato', border: 'red', name: 'Repeat', value: 10}
-      ]
+      steps: this.generateSteps([
+        {name: 'Impressions', value: 200},
+        {name: 'Clicks', value: 100},
+        {name: 'Downloads', value: 60},
+        {name: 'Purchases', value: 40},
+        {name: 'Repeat', value: 10}
+      ])
     };
+  }
+
+  private generateSteps(steps: {name: string,  value: number}[]): FunnelStep[] {
+    return steps.reduce((built, step, index) => {
+      const previousBuilt = built[built.length - 1] as FunnelStep;
+      const lighterThanPreviousBackground = previousBuilt && this.colors.lighterThan(previousBuilt.backgroundColor);
+
+      const backgroundColor = lighterThanPreviousBackground || {theme: this.theme, weight: '500'};
+
+      built.push({
+        id: `funnel-1-step-${index}`,
+        backgroundColor,
+        background: this.colors.mainOf(backgroundColor),
+        border: 'none',
+        name: step.name,
+        value: step.value
+      });
+      return built;
+    }, []);
   }
 }

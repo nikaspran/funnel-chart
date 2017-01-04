@@ -26,6 +26,18 @@ export class EquilateralTrapezoid implements Shape<EquilateralTrapezoidPropertie
   }
 }
 
+export interface LabelProperties extends ShapeProperties {
+  text: string;
+  fontSize: number;
+  centerX: number;
+  centerY: number;
+}
+
+export class Label implements Shape<LabelProperties> {
+  constructor(public props: LabelProperties) {
+  }
+}
+
 export abstract class RenderContext {
   abstract render(shapes: Shape<any>[]);
 
@@ -105,6 +117,20 @@ class SvgRenderContext extends RenderContext {
 
   render(shapes: Shape<any>[]) {
     shapes.forEach(this.renderShape.bind(this));
+    this.removeAllExcept(shapes);
+  }
+
+  private removeAllExcept(usedShapes: Shape<any>[]) {
+    const isUsed = usedShapes
+      .map(shape => shape.props.id)
+      .reduce((used, id) => (used[id] = true) && used, {});
+
+    for (let id in this.previousProps) {
+      if (!isUsed[id]) {
+        delete this.previousProps[id];
+        this.element.removeChild(this.element.querySelector(`#${id}`));
+      }
+    }
   }
 
   private renderShape(shape: Shape<any>) {
@@ -118,6 +144,10 @@ class SvgRenderContext extends RenderContext {
     this.previousProps[shape.props.id] = Object.assign({}, shape.props);
     if (shape instanceof EquilateralTrapezoid) {
       this.renderEquilateralTrapezoid(existingElement, shape.props);
+    }
+
+    if (shape instanceof Label) {
+      this.renderLabel(existingElement, shape.props);
     }
   }
 
@@ -135,28 +165,40 @@ class SvgRenderContext extends RenderContext {
       this.moveTo(topLeft),
       this.lineTo(topRight),
       this.lineTo(bottomRight),
-      this.lineTo(bottomLeft)
+      this.lineTo(bottomLeft),
+      'z'
     ].join(' ');
 
     if (existingElement) {
-      if (props._tween) {
-        props._tween.stop();
-      }
-
-      props._tween = kute.to(existingElement, {
-        path,
-        complete() {
-          delete props._tween;
-        }
-      }).start();
-      return;
+      return this.animateTo(existingElement, props, {path});
     }
 
     const pathElement = document.createElementNS('http://www.w3.org/2000/svg', 'path');
     pathElement.id = props.id;
     pathElement.setAttribute('fill', props.fill);
+    pathElement.setAttribute('stroke', props.stroke);
     pathElement.setAttribute('d', path);
     this.element.appendChild(pathElement);
+  }
+
+  private renderLabel(existingElement: Element, props: LabelProperties) {
+    if (existingElement) {
+      existingElement.innerHTML = props.text;
+      const originalY = parseInt(existingElement.getAttribute('y'), 10);
+      return this.animateTo(existingElement, props, {
+        svgTransform: {translate: [0, props.centerY - originalY]}
+      });
+    }
+
+    const textElement = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    textElement.id = props.id;
+    textElement.setAttribute('text-anchor', 'middle');
+    textElement.setAttribute('fill', props.fill);
+    textElement.setAttribute('font-size', `${props.fontSize}px`);
+    textElement.setAttribute('x', String(props.centerX));
+    textElement.setAttribute('y', String(props.centerY));
+    textElement.innerHTML = props.text;
+    this.element.appendChild(textElement);
   }
 
   private moveTo(point: number[]) {
@@ -165,6 +207,24 @@ class SvgRenderContext extends RenderContext {
 
   private lineTo(point: number[]) {
     return `L${point[0]},${point[1]}`;
+  }
+
+  private animateTo(element: Element, props: ShapeProperties, animateToProps) {
+    return new Promise(resolve => {
+      const tween = kute.to(element, Object.assign({}, animateToProps, {
+        complete() {
+          delete props._tween;
+          resolve();
+        }
+      }));
+
+      if (props._tween) {
+        props._tween.chain(tween);
+      } else {
+        props._tween = tween;
+        props._tween.start();
+      }
+    });
   }
 
   width(): number {
