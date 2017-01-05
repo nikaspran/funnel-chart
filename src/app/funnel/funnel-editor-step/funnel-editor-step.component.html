@@ -1,3 +1,5 @@
+<ng-content select="[fc-funnel-editor-step-header-before]"></ng-content>
+
 <md-input-container>
   <input md-input [(ngModel)]="step.name" [ngModelOptions]="{standalone: true}" placeholder="Name"/>
 </md-input-container>
@@ -6,3 +8,42 @@
          placeholder="Value"/>
   <md-hint class="funnel-editor-step_error" *ngIf="!value.valid" align="start">Must be a Number or %</md-hint>
 </md-input-container>
+<button md-icon-button (click)="expanded = !expanded">
+  <md-icon *ngIf="!expanded">edit</md-icon>
+  <md-icon *ngIf="expanded">expand_less</md-icon>
+</button>
+
+<ng-content select="[fc-funnel-editor-step-header-after]"></ng-content>
+
+<md-card-content *ngIf="expanded" class="funnel-editor-step_toolbar">
+  <div class="funnel-editor-step_toolbar-group">
+    <button md-icon-button [(colorPicker)]="step.background.raw">
+      <md-icon>format_color_fill</md-icon>
+    </button>
+
+  </div>
+
+  <div class="funnel-editor-step_toolbar-group">
+    <button md-icon-button [(colorPicker)]="step.border.raw">
+      <md-icon>border_color</md-icon>
+    </button>
+
+    <button md-icon-button [mdMenuTriggerFor]="borderMenu">
+      <md-icon>border_style</md-icon>
+    </button>
+
+    <md-menu #borderMenu="mdMenu">
+      <button md-menu-item *ngFor="let width of [0, 1, 2, 5, 10, 20, 40, 60]" (click)="step.borderWidth = width">{{width}}</button>
+    </md-menu>
+  </div>
+
+  <div class="funnel-editor-step_toolbar-group">
+    <button md-icon-button [(colorPicker)]="step.color.raw">
+      <md-icon>format_color_text</md-icon>
+    </button>
+  </div>
+
+  <div class="funnel-editor-step_spacer"></div>
+
+  <ng-content select="[fc-funnel-editor-step-content-after]"></ng-content>
+</md-card-content>

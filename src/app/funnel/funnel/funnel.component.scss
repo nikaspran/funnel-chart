@@ -1,6 +1,6 @@
 :host {
   display: flex;
-  align-items: stretch;
+  align-items: flex-start;
 
   > * {
     flex: 1 1;

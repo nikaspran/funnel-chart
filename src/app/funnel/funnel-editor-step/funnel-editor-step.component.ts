@@ -9,6 +9,7 @@ import {FunnelStep} from "../funnel.model";
 })
 export class FunnelEditorStepComponent implements OnInit {
   step: FunnelStep;
+  expanded = false;
 
   constructor() {
   }

@@ -2,9 +2,10 @@ import {Color} from "./colors.service";
 
 export interface FunnelStep {
   id: string;
-  backgroundColor: Color;
-  background: string;
-  border: string;
+  background: Color;
+  border: Color;
+  borderWidth: number;
+  color: Color;
   name?: string;
   value?: number;
 }

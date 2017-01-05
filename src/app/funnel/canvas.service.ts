@@ -6,6 +6,7 @@ export interface ShapeProperties {
   id: string;
   fill: string;
   stroke: string;
+  strokeWidth: number;
   _tween?;
 }
 
@@ -169,21 +170,39 @@ class SvgRenderContext extends RenderContext {
       'z'
     ].join(' ');
 
+    const setChangeableProperties = element => {
+      element.setAttribute('fill', props.fill);
+      element.setAttribute('stroke', props.stroke);
+      element.setAttribute('stroke-width', props.strokeWidth);
+    };
+
     if (existingElement) {
-      return this.animateTo(existingElement, props, {path});
+      setChangeableProperties(existingElement);
+
+      const previousPath = existingElement.getAttribute('d');
+      if (previousPath !== path) {
+        this.animateTo(existingElement, props, {path});
+      }
+
+      return;
     }
 
     const pathElement = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    setChangeableProperties(pathElement);
     pathElement.id = props.id;
-    pathElement.setAttribute('fill', props.fill);
-    pathElement.setAttribute('stroke', props.stroke);
     pathElement.setAttribute('d', path);
     this.element.appendChild(pathElement);
   }
 
   private renderLabel(existingElement: Element, props: LabelProperties) {
+    const setChangeableProperties = element => {
+      element.innerHTML = props.text;
+      element.setAttribute('fill', props.fill);
+      element.setAttribute('font-size', `${props.fontSize}px`);
+    };
+
     if (existingElement) {
-      existingElement.innerHTML = props.text;
+      setChangeableProperties(existingElement);
       const originalY = parseInt(existingElement.getAttribute('y'), 10);
       return this.animateTo(existingElement, props, {
         svgTransform: {translate: [0, props.centerY - originalY]}
@@ -191,13 +210,11 @@ class SvgRenderContext extends RenderContext {
     }
 
     const textElement = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    setChangeableProperties(textElement);
     textElement.id = props.id;
     textElement.setAttribute('text-anchor', 'middle');
-    textElement.setAttribute('fill', props.fill);
-    textElement.setAttribute('font-size', `${props.fontSize}px`);
     textElement.setAttribute('x', String(props.centerX));
     textElement.setAttribute('y', String(props.centerY));
-    textElement.innerHTML = props.text;
     this.element.appendChild(textElement);
   }
 

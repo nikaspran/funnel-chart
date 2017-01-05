@@ -61,8 +61,9 @@ export class FunnelComponent implements OnInit {
         id: current.id,
         centerX: this.context.width() / 2,
         centerY,
-        fill: current.background,
-        stroke: current.border,
+        fill: current.background.raw,
+        stroke: current.border.raw,
+        strokeWidth: current.borderWidth,
         height,
         widthTop,
         widthBottom
@@ -71,8 +72,9 @@ export class FunnelComponent implements OnInit {
       if (current.name) {
         result.push(new Label({
           id: `${current.id}_title`,
-          fill: 'black',
+          fill: current.color.raw,
           stroke: 'none',
+          strokeWidth: 1,
           text: current.name,
           fontSize: 36,
           centerX: this.context.width() / 2,

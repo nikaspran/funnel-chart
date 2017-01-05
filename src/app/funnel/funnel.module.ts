@@ -6,13 +6,15 @@ import {FormsModule} from "@angular/forms";
 import {MaterialModule} from "@angular/material";
 import {FunnelEditorStepComponent} from './funnel-editor-step/funnel-editor-step.component';
 import {DragulaModule} from "ng2-dragula";
+import {ColorPickerModule} from "angular2-color-picker";
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     DragulaModule,
-    MaterialModule
+    MaterialModule,
+    ColorPickerModule
   ],
   exports: [FunnelComponent, FunnelEditorComponent],
   declarations: [FunnelComponent, FunnelEditorComponent, FunnelEditorStepComponent]

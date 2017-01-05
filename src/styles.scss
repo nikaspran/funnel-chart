@@ -1,7 +1,8 @@
 @import '~@angular/material/core/theming/all-theme';
+
 @include md-core(); // Include non-theme styles for core.
 $primary: md-palette($md-grey);
-$accent:  md-palette($md-amber, A200, A100, A400);
+$accent: md-palette($md-amber, A200, A100, A400);
 $theme: md-light-theme($primary, $accent);
 @include angular-material-theme($theme); // Include all theme styles for the components.
 
@@ -11,4 +12,8 @@ html,
 body {
   margin: 0;
   height: 100%;
+}
+
+* {
+  font-family: -apple-system, ".SFNSText-Regular", "San Francisco", "Roboto", "Segoe UI", "Helvetica Neue", "Lucida Grande", sans-serif;
 }

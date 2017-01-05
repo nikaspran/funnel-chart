@@ -1,13 +1,16 @@
 <form [dragula]="'steps'" [dragulaModel]="funnel.steps" autocomplete="off"
       id="disable-lastpass-autocomplete-with-id-containing-search">
   <md-card *ngFor="let step of funnel.steps" class="md-elevation-z1">
-    <button md-icon-button [disableRipple]="true">
-      <md-icon class="funnel-editor_reorder-handle">reorder</md-icon>
-    </button>
-    <fc-funnel-editor-step [step]="step"></fc-funnel-editor-step>
-    <button md-icon-button (click)="removeStep(step)" [disabled]="funnel.steps.length <= 1">
-      <md-icon>delete</md-icon>
-    </button>
+    <fc-funnel-editor-step [step]="step">
+      <button fc-funnel-editor-step-header-after md-icon-button [disableRipple]="true">
+        <md-icon class="funnel-editor_reorder-handle">reorder</md-icon>
+      </button>
+
+      <button fc-funnel-editor-step-content-after md-icon-button (click)="removeStep(step)"
+              [disabled]="funnel.steps.length <= 1">
+        <md-icon>delete</md-icon>
+      </button>
+    </fc-funnel-editor-step>
   </md-card>
 </form>
 

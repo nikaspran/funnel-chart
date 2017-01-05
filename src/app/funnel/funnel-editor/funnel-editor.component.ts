@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {Funnel, FunnelStep} from "../funnel.model";
 import {DragulaService} from "ng2-dragula";
-import {ColorsService} from "../colors.service";
+import {ColorsService, Color} from "../colors.service";
 
 @Component({
   selector: 'fc-funnel-editor',
@@ -26,13 +26,14 @@ export class FunnelEditorComponent implements OnInit {
 
   addStep() {
     const previousStep = this.funnel.steps[this.funnel.steps.length - 1];
-    const backgroundColor = this.colors.lighterThan(previousStep.backgroundColor);
+    const background = this.colors.lighterThan(previousStep.background);
 
     this.funnel.steps.push({
       id: `step-${this.generateUUID()}`,
-      backgroundColor,
-      background: this.colors.mainOf(backgroundColor),
-      border: 'none',
+      background,
+      border: previousStep.border.clone(),
+      borderWidth: previousStep.borderWidth,
+      color: previousStep.color.clone(),
       value: Math.round(previousStep.value * 0.8)
     });
   }
