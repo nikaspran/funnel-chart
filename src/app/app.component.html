@@ -1,8 +1,22 @@
 <md-toolbar color="primary" class="md-elevation-z4">
-  Funnel Chart Creator
+  <h2>Funnel Chart Creator</h2>
+
+  <div class="app_spacer"></div>
+
+  <button md-icon-button [mdMenuTriggerFor]="downloadMenu" (onMenuOpen)="generateDownloads()">
+    <md-icon>file_download</md-icon>
+  </button>
+
+  <md-menu #downloadMenu>
+    <button md-menu-item *ngFor="let format of EXPORT_FORMATS"
+            (click)="downloadAs(format)"
+            [disabled]="!readyForDownload[format]">
+      <span>{{format.toUpperCase()}}</span>
+    </button>
+  </md-menu>
 </md-toolbar>
 
 <div class="app_content">
-  <fc-funnel [funnel]="funnel"></fc-funnel>
+  <fc-funnel [funnel]="funnel" (contextChange)="context = $event"></fc-funnel>
   <fc-funnel-editor [funnel]="funnel"></fc-funnel-editor>
 </div>

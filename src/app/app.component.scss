@@ -8,6 +8,10 @@ md-toolbar {
   z-index: 100;
 }
 
+.app_spacer {
+  flex: 1 1;
+}
+
 .app_content {
   flex: 1 1;
   display: flex;

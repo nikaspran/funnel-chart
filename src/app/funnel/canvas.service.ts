@@ -45,6 +45,8 @@ export abstract class RenderContext {
   abstract width(): number;
 
   abstract height(): number;
+
+  abstract exportBlob(format: string): Promise<Blob>;
 }
 
 class CanvasRenderContext extends RenderContext {
@@ -94,6 +96,10 @@ class CanvasRenderContext extends RenderContext {
 
   height(): number {
     return this.ctx.canvas.clientHeight;
+  }
+
+  exportBlob(format: string): Promise<Blob> {
+    return undefined;
   }
 }
 
@@ -252,6 +258,47 @@ class SvgRenderContext extends RenderContext {
     return 1000;
   }
 
+  exportBlob(format: string): Promise<Blob> {
+    switch (format) {
+      case 'svg':
+        return Promise.resolve(this.toSvg());
+      case 'png':
+        return this.toPng();
+      default:
+        throw new Error(`Unknown RenderContext export format: ${format}`);
+    }
+  }
+
+  private toSvg(): Blob {
+    return new Blob([this.toString()], {type: 'image/svg+xml;charset=utf-8'});
+  }
+
+  private toPng(): Promise<Blob> {
+    return new Promise(resolve => {
+      const img = new Image();
+      const dataUrl = URL.createObjectURL(this.toSvg());
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+
+      img.width = canvas.width = 1024;
+      img.height = canvas.height = 1024;
+
+      img.onload = function () {
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        URL.revokeObjectURL(dataUrl);
+        canvas.toBlob(resolve, 'image/png');
+      };
+
+      img.src = dataUrl;
+    });
+  }
+
+  private toString(): string {
+    const serializer = new XMLSerializer();
+
+    return serializer.serializeToString(this.element)
+      .replace(/_ng[-\w]+=?"?"?/, ''); // angular attributes
+  }
 }
 
 @Injectable()

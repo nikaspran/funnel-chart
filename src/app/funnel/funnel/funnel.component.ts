@@ -1,5 +1,5 @@
 import {
-  Component, OnInit, ViewChild, ElementRef, SimpleChanges, KeyValueDiffer
+  Component, OnInit, ViewChild, ElementRef, SimpleChanges, KeyValueDiffer, Output, EventEmitter
 } from '@angular/core';
 import {CanvasService, Shape, EquilateralTrapezoid, RenderContext, Label} from "../canvas.service";
 import {Funnel} from "../funnel.model";
@@ -9,13 +9,24 @@ import {Funnel} from "../funnel.model";
   templateUrl: './funnel.component.html',
   styleUrls: ['./funnel.component.scss'],
   inputs: ['funnel'],
+  outputs: ['context'],
   providers: [CanvasService]
 })
 export class FunnelComponent implements OnInit {
   @ViewChild('renderTarget') renderTarget: ElementRef;
   funnel: Funnel;
-  context: RenderContext;
   private differ: KeyValueDiffer;
+
+  @Output() contextChange = new EventEmitter();
+  private _context: RenderContext;
+  get context(): RenderContext {
+    return this._context;
+  }
+
+  set context(context) {
+    this._context = context;
+    this.contextChange.emit(this._context);
+  }
 
   constructor(private canvasService: CanvasService) {
   }
